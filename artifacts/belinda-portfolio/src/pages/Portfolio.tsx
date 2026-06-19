@@ -1,4 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
+import SocraticChat from "@/components/demos/SocraticChat";
+import LeadershipSim from "@/components/demos/LeadershipSim";
+import AdaptiveAssessment from "@/components/demos/AdaptiveAssessment";
+import QADashboard from "@/components/demos/QADashboard";
+import CurriculumBuilder from "@/components/demos/CurriculumBuilder";
+import AnalyticsDashboard from "@/components/demos/AnalyticsDashboard";
+import CoursePlayer from "@/components/demos/CoursePlayer";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -665,9 +672,18 @@ function CaseStudies() {
 }
 
 // ─── Work Examples ─────────────────────────────────────────────────────────────
-function BrowserMock({ url, label, children }: { url: string; label: string; children: React.ReactNode }) {
+type Demo = {
+  id: string;
+  label: string;
+  url: string;
+  tag: string;
+  description: string;
+  component: React.ReactNode;
+};
+
+function BrowserMock({ url, children }: { url: string; children: React.ReactNode }) {
   return (
-    <div className="browser-mock" data-testid={`work-example-${label.replace(/\s+/g, '-').toLowerCase()}`}>
+    <div className="browser-mock" style={{ borderRadius: 12, overflow: "hidden", border: "1px solid #CFD6CF", boxShadow: "0 4px 24px rgba(22,40,43,0.10)" }}>
       <div className="browser-bar">
         <div className="dot" style={{ background: "#FF5F57" }} />
         <div className="dot" style={{ background: "#FFBD2E" }} />
@@ -675,150 +691,176 @@ function BrowserMock({ url, label, children }: { url: string; label: string; chi
         <div className="url-bar">{url}</div>
       </div>
       {children}
-      <div
-        className="px-4 py-3 text-xs font-semibold"
-        style={{ background: "#EEF1EC", color: "#2E6E64", borderTop: "1px solid #CFD6CF" }}
-      >
-        {label}
-      </div>
     </div>
   );
 }
 
 function WorkExamples() {
   const titleRef = useScrollReveal();
+  const [activeId, setActiveId] = useState("socratic");
+
+  const demos: Demo[] = [
+    {
+      id: "socratic",
+      label: "Socratic Tutor",
+      url: "synops.ai/tutor",
+      tag: "AI Product",
+      description: "Pick a topic and have a real Socratic conversation. The system responds only with questions, never answers.",
+      component: <SocraticChat />,
+    },
+    {
+      id: "leadership",
+      label: "Leadership Sim",
+      url: "synops.ai/sim",
+      tag: "Simulation",
+      description: "Navigate 3 real management scenarios. Choose your response, see the consequence, and receive a scored debrief.",
+      component: <LeadershipSim />,
+    },
+    {
+      id: "adaptive",
+      label: "Adaptive Quiz",
+      url: "synops.ai/assess",
+      tag: "Assessment",
+      description: "5 questions that adjust in real time based on your answers. Correct answers raise difficulty; wrong ones recalibrate.",
+      component: <AdaptiveAssessment />,
+    },
+    {
+      id: "qa",
+      label: "QA Dashboard",
+      url: "internal.qms/review",
+      tag: "Automation",
+      description: "An interactive Quality Matters review workflow. Filter by status, expand rows, and approve or flag modules live.",
+      component: <QADashboard />,
+    },
+    {
+      id: "curriculum",
+      label: "Curriculum Builder",
+      url: "synops.ai/build",
+      tag: "AI Product",
+      description: "Type a learning topic and watch the engine scaffold a full curriculum with objectives, activities, and assessments.",
+      component: <CurriculumBuilder />,
+    },
+    {
+      id: "analytics",
+      label: "Analytics View",
+      url: "synops.ai/analytics",
+      tag: "Learning Analytics",
+      description: "A cohort analytics dashboard. Toggle metrics, expand learner rows, and identify at-risk participants.",
+      component: <AnalyticsDashboard />,
+    },
+    {
+      id: "course",
+      label: "Course Player",
+      url: "synops.ai/learn",
+      tag: "Course Design",
+      description: "A fully playable micro-course on learning design. Navigate lessons, complete slides, and unlock progress.",
+      component: <CoursePlayer />,
+    },
+  ];
+
+  const active = demos.find((d) => d.id === activeId) ?? demos[0];
+
+  const tagColors: Record<string, string> = {
+    "AI Product": "#D9920B",
+    "Simulation": "#2E6E64",
+    "Assessment": "#2E6E64",
+    "Automation": "#16282B",
+    "Learning Analytics": "#16282B",
+    "Course Design": "#D9920B",
+  };
+
   return (
     <section id="work-examples" className="py-24 px-6" style={{ background: "#EEF1EC" }}>
       <div className="max-w-6xl mx-auto">
-        <div ref={titleRef} className="reveal mb-14">
+        <div ref={titleRef} className="reveal mb-10">
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#D9920B", letterSpacing: "0.12em" }}>
-            The Work, Rendered
+            Live Demos, Not Screenshots
           </p>
           <h2 className="font-fraunces text-3xl md:text-4xl font-semibold" style={{ color: "#16282B" }}>
             Work Examples
           </h2>
+          <p className="mt-3 text-base" style={{ color: "#2E6E64", maxWidth: 560 }}>
+            Every demo below is fully interactive. Click, type, answer, and explore. These are the kinds of systems Belinda builds.
+          </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Socratic AI Chat */}
-          <Reveal>
-            <BrowserMock url="synops.ai/chat" label="Socratic Reasoning Platform">
-              <div style={{ background: "#16282B", padding: "24px", minHeight: 220 }}>
-                <div className="space-y-3">
-                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <div style={{ background: "#2E6E64", color: "white", borderRadius: "14px 14px 4px 14px", padding: "10px 14px", maxWidth: "75%", fontSize: 13 }}>
-                      I think I understand the concept but keep getting the same score on assessments.
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "flex-start" }}>
-                    <div style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.92)", borderRadius: "14px 14px 14px 4px", padding: "10px 14px", maxWidth: "80%", fontSize: 13 }}>
-                      <span style={{ color: "#D9920B", fontSize: 11, fontWeight: 600, display: "block", marginBottom: 4 }}>SYNOPS</span>
-                      Interesting. When you say you "understand" it, what specifically can you do with that understanding that you couldn't do before?
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "flex-start" }}>
-                    <div style={{ background: "rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.92)", borderRadius: "14px 14px 14px 4px", padding: "10px 14px", maxWidth: "80%", fontSize: 13 }}>
-                      <span style={{ color: "#D9920B", fontSize: 11, fontWeight: 600, display: "block", marginBottom: 4 }}>SYNOPS</span>
-                      And if you had to explain this concept to someone who had never heard of it, where would you start?
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </BrowserMock>
-          </Reveal>
 
-          {/* Leadership Simulation */}
-          <Reveal delay={100}>
-            <BrowserMock url="synops.ai/sim" label="Leadership Simulation">
-              <div style={{ background: "#fafafa", padding: "24px", minHeight: 220 }}>
-                <div style={{ display: "flex", gap: 14, marginBottom: 18 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "#2E6E64", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontWeight: 600, fontSize: 16, flexShrink: 0 }}>
-                    M
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: 13, color: "#16282B", marginBottom: 10 }}>
-                      Your team member missed the deadline again. How do you respond?
-                    </p>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                      <button style={{ background: "#EEF1EC", border: "1.5px solid #2E6E64", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#16282B", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        Schedule a private check-in to understand the cause
-                        <span style={{ background: "#D9920B", color: "white", borderRadius: 20, padding: "2px 8px", fontSize: 11, fontWeight: 600, marginLeft: 8 }}>+12 pts</span>
-                      </button>
-                      <button style={{ background: "#EEF1EC", border: "1px solid #CFD6CF", borderRadius: 8, padding: "8px 12px", fontSize: 12, color: "#16282B", textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        Address it in the next team meeting
-                        <span style={{ background: "#CFD6CF", color: "#16282B", borderRadius: 20, padding: "2px 8px", fontSize: 11, fontWeight: 600, marginLeft: 8 }}>+5 pts</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div style={{ background: "#EEF1EC", borderRadius: 8, overflow: "hidden", height: 6 }}>
-                  <div style={{ width: "62%", height: "100%", background: "#2E6E64" }} />
-                </div>
-                <p style={{ fontSize: 11, color: "#2E6E64", marginTop: 6 }}>Scenario 4 of 8 — Leadership Track</p>
-              </div>
-            </BrowserMock>
-          </Reveal>
-
-          {/* QA Dashboard */}
-          <Reveal delay={100}>
-            <BrowserMock url="internal.qms/review" label="Course QA Dashboard">
-              <div style={{ background: "#fafafa", padding: "20px", minHeight: 220 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: "#16282B" }}>Module Review Status</span>
-                  <div style={{ position: "relative", width: 44, height: 44 }}>
-                    <svg viewBox="0 0 36 36" style={{ width: 44, height: 44, transform: "rotate(-90deg)" }}>
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#EEF1EC" strokeWidth="4" />
-                      <circle cx="18" cy="18" r="14" fill="none" stroke="#D9920B" strokeWidth="4" strokeDasharray={`${0.78 * 88} 88`} />
-                    </svg>
-                    <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, color: "#16282B" }}>78%</span>
-                  </div>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {[
-                    { name: "Module 1: Foundations", status: "Approved", color: "#2E6E64", bg: "#E8F4F1" },
-                    { name: "Module 2: Core Concepts", status: "In Review", color: "#D9920B", bg: "#FEF3DC" },
-                    { name: "Module 3: Application", status: "Flagged", color: "#C0392B", bg: "#FDECEA" },
-                    { name: "Module 4: Assessment", status: "Pending", color: "#888", bg: "#F0F0F0" },
-                  ].map((row) => (
-                    <div key={row.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 12, padding: "6px 0", borderBottom: "1px solid #EEF1EC" }}>
-                      <span style={{ color: "#16282B" }}>{row.name}</span>
-                      <span style={{ background: row.bg, color: row.color, borderRadius: 20, padding: "2px 10px", fontWeight: 600, fontSize: 11 }}>{row.status}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </BrowserMock>
-          </Reveal>
-
-          {/* Adaptive Assessment */}
-          <Reveal delay={200}>
-            <BrowserMock url="synops.ai/assess" label="Adaptive Assessment Engine">
-              <div style={{ background: "#fafafa", padding: "20px", minHeight: 220, display: "flex", gap: 16 }}>
-                <div style={{ flex: 2 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10 }}>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: "#16282B" }}>Question 7</span>
-                    <span style={{ background: "#2E6E64", color: "white", borderRadius: 20, padding: "2px 10px", fontSize: 11, fontWeight: 600 }}>Level 3/5</span>
-                  </div>
-                  <p style={{ fontSize: 13, color: "#16282B", marginBottom: 12, lineHeight: 1.5 }}>
-                    Which cognitive process is most activated in a Socratic learning exchange?
-                  </p>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                    {["Recall and retrieval", "Metacognitive reflection", "Passive observation", "Rote memorization"].map((opt, i) => (
-                      <div key={opt} style={{ border: `1.5px solid ${i === 1 ? "#2E6E64" : "#CFD6CF"}`, background: i === 1 ? "#E8F4F1" : "white", borderRadius: 7, padding: "7px 10px", fontSize: 12, color: "#16282B" }}>
-                        {opt}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div style={{ flex: 1, background: "#16282B", borderRadius: 10, padding: "14px", fontSize: 12 }}>
-                  <p style={{ color: "#D9920B", fontWeight: 600, marginBottom: 8, fontSize: 11 }}>AI FEEDBACK</p>
-                  <p style={{ color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>
-                    Correct. Socratic dialogue activates metacognition by requiring learners to examine their own reasoning.
-                  </p>
-                </div>
-              </div>
-            </BrowserMock>
-          </Reveal>
+        {/* Tab strip */}
+        <div className="flex gap-2 flex-wrap mb-8">
+          {demos.map((d) => (
+            <button
+              key={d.id}
+              onClick={() => setActiveId(d.id)}
+              data-testid={`demo-tab-${d.id}`}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9920B]"
+              style={{
+                background: activeId === d.id ? "#16282B" : "white",
+                color: activeId === d.id ? "white" : "#16282B",
+                border: `1px solid ${activeId === d.id ? "#16282B" : "#CFD6CF"}`,
+              }}
+            >
+              <span
+                className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                style={{
+                  background: activeId === d.id ? "rgba(255,255,255,0.15)" : (tagColors[d.tag] ?? "#888") + "18",
+                  color: activeId === d.id ? "rgba(255,255,255,0.85)" : (tagColors[d.tag] ?? "#888"),
+                  fontSize: 10,
+                }}
+              >
+                {d.tag}
+              </span>
+              {d.label}
+            </button>
+          ))}
         </div>
+
+        {/* Active demo */}
+        <Reveal key={activeId}>
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
+            {/* Description card */}
+            <div
+              className="lg:col-span-2 rounded-[14px] p-7 flex flex-col justify-between"
+              style={{ background: "#16282B", minHeight: 200 }}
+            >
+              <div>
+                <span
+                  className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4"
+                  style={{
+                    background: (tagColors[active.tag] ?? "#888") + "30",
+                    color: tagColors[active.tag] ?? "white",
+                  }}
+                >
+                  {active.tag}
+                </span>
+                <h3 className="font-fraunces text-xl font-semibold text-white mb-3">{active.label}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
+                  {active.description}
+                </p>
+              </div>
+              <div className="mt-6 flex gap-1">
+                {demos.map((d) => (
+                  <button
+                    key={d.id}
+                    onClick={() => setActiveId(d.id)}
+                    className="rounded-full transition-all focus:outline-none"
+                    style={{
+                      height: 6,
+                      width: d.id === activeId ? 24 : 6,
+                      background: d.id === activeId ? "#D9920B" : "rgba(255,255,255,0.25)",
+                    }}
+                    aria-label={d.label}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Browser mock with demo */}
+            <div className="lg:col-span-3">
+              <BrowserMock url={active.url}>
+                {active.component}
+              </BrowserMock>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
