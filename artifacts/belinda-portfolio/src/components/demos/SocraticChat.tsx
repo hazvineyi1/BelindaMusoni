@@ -126,10 +126,11 @@ export default function SocraticChat() {
   const [prevClaim, setPrevClaim] = useState("");
   const [usedKeys, setUsedKeys] = useState<Set<string>>(new Set());
   const [trace, setTrace] = useState<TraceStep[]>([]);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    const el = scrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
   }, [messages, typing]);
 
   const selectTopic = (t: string) => {
@@ -220,7 +221,7 @@ export default function SocraticChat() {
       {/* Chat column */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
         {/* Messages */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "18px 18px 10px", display: "flex", flexDirection: "column", gap: 10, maxHeight: 280 }}>
+        <div ref={scrollRef} style={{ flex: 1, overflowY: "auto", padding: "18px 18px 10px", display: "flex", flexDirection: "column", gap: 10, maxHeight: 280 }}>
           {messages.map((m, i) => (
             <div key={i} style={{ display: "flex", justifyContent: m.role === "user" ? "flex-end" : "flex-start" }}>
               <div style={{
@@ -250,7 +251,6 @@ export default function SocraticChat() {
               </div>
             </div>
           )}
-          <div ref={bottomRef} />
         </div>
 
         {/* Input */}
