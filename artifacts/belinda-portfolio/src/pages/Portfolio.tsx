@@ -6,6 +6,9 @@ import QADashboard from "@/components/demos/QADashboard";
 import CurriculumBuilder from "@/components/demos/CurriculumBuilder";
 import AnalyticsDashboard from "@/components/demos/AnalyticsDashboard";
 import CoursePlayer from "@/components/demos/CoursePlayer";
+import StoryboardEditor from "@/components/demos/StoryboardEditor";
+import ObjectiveMapper from "@/components/demos/ObjectiveMapper";
+import ELearningSlide from "@/components/demos/ELearningSlide";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -740,17 +743,6 @@ function DemoCard({ demo, index }: { demo: DemoConfig; index: number }) {
               {demo.num}
             </span>
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span
-                  className="text-xs font-semibold px-2.5 py-0.5 rounded-full"
-                  style={{
-                    background: (tagColors[demo.tag] ?? "#888") + (isEven ? "30" : "18"),
-                    color: tagColors[demo.tag] ?? "#888",
-                  }}
-                >
-                  {demo.tag}
-                </span>
-              </div>
               <h3
                 className="font-fraunces text-lg font-semibold"
                 style={{ color: isEven ? "white" : "#16282B" }}
@@ -767,22 +759,7 @@ function DemoCard({ demo, index }: { demo: DemoConfig; index: number }) {
           </p>
         </div>
 
-        {/* Browser chrome + interactive demo */}
-        <div>
-          <div
-            className="flex items-center gap-2 px-4 py-3 border-b"
-            style={{ background: "#F5F5F3", borderColor: "#EEF1EC" }}
-          >
-            <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#FF5F57" }} />
-            <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#FFBD2E" }} />
-            <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#28C840" }} />
-            <div
-              className="ml-2 flex-1 px-3 py-1 rounded text-xs"
-              style={{ background: "white", border: "1px solid #E0E0E0", color: "#999", maxWidth: 280 }}
-            >
-              {demo.url}
-            </div>
-          </div>
+        <div style={{ borderTop: "1px solid #EEF1EC" }}>
           {demo.component}
         </div>
       </div>
@@ -849,6 +826,30 @@ function WorkExamples() {
       description: "A fully playable micro-course. Navigate lessons, complete slides, and track your progress.",
       url: "synops.ai/learn",
       component: <CoursePlayer />,
+    },
+    {
+      num: "08",
+      tag: "Instructional Design",
+      title: "Course Storyboard",
+      description: "A live storyboard for a 6-slide AI literacy module. Click any slide, edit narration and dev notes directly.",
+      url: "synops.ai/storyboard",
+      component: <StoryboardEditor />,
+    },
+    {
+      num: "09",
+      tag: "Instructional Design",
+      title: "Learning Objective Mapper",
+      description: "Six objectives mapped to Bloom's levels, assessments, and activities. Click the Bloom badge to cycle levels.",
+      url: "synops.ai/objectives",
+      component: <ObjectiveMapper />,
+    },
+    {
+      num: "10",
+      tag: "Instructional Design",
+      title: "eLearning Slide Samples",
+      description: "Three interactive slide types: tabbed content, a branching scenario, and a progressive reveal. Navigate through them.",
+      url: "synops.ai/slides",
+      component: <ELearningSlide />,
     },
   ];
 
