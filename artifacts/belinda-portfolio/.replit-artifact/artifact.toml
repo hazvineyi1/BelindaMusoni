@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Belinda Musoni Portfolio"
+version = "1.0.0"
+id = "artifacts/belinda-portfolio"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25395
+
+[services.development]
+run = "pnpm --filter @workspace/belinda-portfolio run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/belinda-portfolio", "run", "build" ]
+publicDir = "artifacts/belinda-portfolio/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25395"
+BASE_PATH = "/"

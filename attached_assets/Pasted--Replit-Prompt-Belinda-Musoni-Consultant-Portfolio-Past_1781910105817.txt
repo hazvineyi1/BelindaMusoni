@@ -1,0 +1,62 @@
+# Replit Prompt: Belinda Musoni Consultant Portfolio
+
+Paste everything in the box below into Replit AI (Agent or Assistant) to generate and host the portfolio. If you already have the `belinda_musoni_portfolio.html` file, you can skip the prompt and simply upload that file to a Replit "HTML, CSS, JS" Repl as `index.html`. The prompt is for rebuilding or extending it from scratch.
+
+---
+
+## The Prompt
+
+Build a single-page, fully responsive personal consulting portfolio website as one self-contained `index.html` file (all CSS and JavaScript inline, no build step, no external frameworks). It must run as a static site on Replit. Use only Google Fonts via CDN. Do not use any other external dependencies.
+
+**Person:** Belinda Musoni, an AI Learning Experience Architect, AI Product Builder, and Instructional Design and EdTech Consultant. She is available for global, fully remote consulting.
+
+**Brand and aesthetic:**
+- Sophisticated, editorial, premium consultant feel. Not a generic template.
+- Color palette: deep ink charcoal (#16282B), verdigris green (#2E6E64 and #1D4A43), warm marigold accent (#D9920B), soft paper background (#EEF1EC), white cards.
+- Typography: "Fraunces" serif for all headings and display text, "Archivo" sans-serif for body.
+- Generous whitespace, 14px rounded corners, subtle borders (#CFD6CF), restrained shadows.
+- IMPORTANT: never use em dashes anywhere in the copy. Use commas, colons, or restructure instead.
+
+**Required sections, in order:**
+
+1. **Sticky top navigation** with her name as a wordmark (the period after the name in marigold) and links: Services, Case Studies, Work Examples, Toolkit, Approach, and a pill-shaped "Contact" button. Links collapse on mobile.
+
+2. **Hero** with a two-column layout:
+   - Left: eyebrow label reading "AI Learning Experience Architect, AI Product Builder, EdTech Consultant", a large headline reading "I build learning systems that think with the learner, not at them" where "think with" has an animated marigold-to-verdigris gradient shimmer. A subheading positioning her as Quality Matters certified, a doctoral ML researcher, and an AI product builder who took an AI learning platform from concept to live production single-handedly by designing the LLM architecture, orchestrating multiple AI agents, and shipping software through vibe coding, partnering with universities, professional education providers, SaaS and edtech teams, and global L&D organizations. Two buttons: "Start a Conversation" and "Explore the Work."
+   - Right: a dark "signature" card titled "The First Questions I Ask Every Client" that rotates every 6 seconds through 5 Socratic discovery questions, with animated dot indicators.
+
+3. **Animated metric counters** in a bordered strip: 30+ courses designed, 98% on-time delivery, 20% engagement lift, 15+ years experience. Numbers count up when scrolled into view.
+
+4. **A horizontal scrolling capability marquee** beneath the hero that pauses on hover, listing: AI Product Development, Multi-Agent Orchestration, Vibe Coding, AI Learning Strategy, Socratic Tutoring Systems, Curriculum Architecture, Quality Matters Certified, LLM Prompt Engineering, Game-Based Learning, Learning Analytics, Faculty AI Literacy, WCAG and UDL Design.
+
+5. **Services**: a 3-column card grid (6 cards): AI Learning Strategy and Implementation; Curriculum and Course Architecture; AI Product Development and Prototyping (covering multi-agent system design and orchestration, Socratic and reasoning engines, branching simulations and adaptive assessment, built at startup speed through vibe coding); QA Systems and Course Review Automation; Faculty Development and AI Literacy; Learning Analytics and Research. Each card has a small category tag, a title, a short description, and 3 bullet points. Cards lift on hover.
+
+6. **Case Studies**: an accordion (one open at a time) with 6 entries. Each expands to a two-column layout: a narrative with sub-headed bullet lists on the left, and a stats sidebar with capability pills on the right. The six: (a) An AI Socratic Reasoning Platform built solo from idea to production under her company Synops Advisory, where she served as Founder and AI Product Architect, emphasizing the multi-agent architecture (specialized agents collaborating across content, feedback, assessment, and review), vibe coding to ship at startup speed, and that it earned serious commercial acquisition interest from a major industry player; (b) leading instructional design for a complete graduate-level professional education program at Barbri Global with 30+ courses, 10+ designers led, 20% engagement lift; (c) a branching communication skills simulation (a coaching conversation) with spoken avatars and a generated feedback script that scores questioning strategy and active listening; (d) an automated course QA review platform; (e) an LMS implementation for a nonprofit supporting 100+ learners; (f) doctoral research in adaptive AI tutoring plus university teaching. Do not name or link any specific litigated AI platform; refer to it generically as "an AI Socratic reasoning platform."
+
+7. **Work Examples**: a 2-column grid of 4 stylized "screenshot" mockups, each built purely in HTML and CSS inside a faux browser window frame (three colored dots and a URL bar). The four mockups: (a) a Socratic AI chat conversation showing the system asking layered questions; (b) a communication skills simulation (a coaching conversation) with a CSS avatar, dialogue choices, and scoring pills; (c) an automated QA dashboard with module rows, status badges, and a progress bar; (d) a learning analytics panel with stat cards and a CSS bar chart. Each mockup has a caption with a category label, title, and one-line description. Cards lift on hover.
+
+8. **Toolkit**: filterable tag grid with filter buttons (All, LMS, AI and LLM, Authoring, Automation, Project and Collab, Standards). Clicking a filter shows only matching tools. Include: Canvas, Blackboard, Moodle, Brightspace/D2L; Claude, ChatGPT, Microsoft Copilot, custom LLM API integrations, multi-agent orchestration, GitHub Copilot, Cursor, Bolt.new; Articulate Storyline 360, Rise 360, Adobe Captivate, Camtasia, Vyond, Adobe Creative Suite, Canva; Zapier, Make, API pipelines; Smartsheet, Asana, Monday.com, SharePoint, Microsoft Teams, Slack, Google Workspace; Quality Matters, WCAG, UDL, ADDIE, SAM, Backward Design, OER curation.
+
+9. **Approach**: a 4-step process grid: Diagnose, Design, Build and Pilot, Measure and Hand Off.
+
+10. **Credentials**: a 2-column card grid: PhD in Machine Learning (in progress); M.Ed. E-Learning and Instructional Design, Northeastern University; Quality Matters Certified; professional memberships AECT and ISTE.
+
+11. **Contact** (a full contact section, not just a button): a two-panel card. Left panel is dark with an ambient animated gradient, a heading, contact methods (email hazvimusoni@gmail.com, LinkedIn at https://www.linkedin.com/in/belinda-musoni-80b460183), and a line that rotates every few seconds showing the live local time across global cities (Dallas, New York, London, Dubai, Singapore, Sydney) using the browser's Intl time zone support. Right panel is a contact form (Name, Email, a "What do you need?" dropdown, and Project details). The Send button assembles the field values into a prefilled mailto link to hazvimusoni@gmail.com and opens the user's email client. Do not use a real backend; do not use localStorage or sessionStorage.
+
+12. **Footer**: copyright line "2026 Belinda Musoni, Synops Advisory" and the tagline "Learning design, grounded in evidence. Delivered worldwide."
+
+**Interactions and accessibility (required):**
+- Scroll-reveal fade-in for sections using IntersectionObserver.
+- All animations (gradient shimmer, marquee, counters, reveals, gradient drift) must be disabled under a `prefers-reduced-motion: reduce` media query.
+- Visible focus outlines on all interactive elements; semantic buttons with aria-expanded on the accordion.
+- Fully responsive down to mobile; grids collapse to single column.
+
+**Output:** produce the complete `index.html`, then run it so I can preview it in Replit's web view.
+
+---
+
+## After it builds
+
+- Click **Run**. Replit serves the file in the preview pane and gives you a public URL.
+- To use a custom domain (for example synopsadvisory.com), open the Repl's Deployments tab, choose a Static deployment, and follow the custom domain steps.
+- To edit copy later, just open `index.html` and change the text. Everything lives in that one file.
