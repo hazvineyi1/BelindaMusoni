@@ -695,172 +695,183 @@ function BrowserMock({ url, children }: { url: string; children: React.ReactNode
   );
 }
 
+const tagColors: Record<string, string> = {
+  "AI Product": "#D9920B",
+  "Simulation": "#2E6E64",
+  "Assessment": "#2E6E64",
+  "Automation": "#16282B",
+  "Learning Analytics": "#16282B",
+  "Course Design": "#D9920B",
+};
+
+type DemoConfig = {
+  num: string;
+  tag: string;
+  title: string;
+  description: string;
+  url: string;
+  component: React.ReactNode;
+};
+
+function DemoCard({ demo, index }: { demo: DemoConfig; index: number }) {
+  const ref = useScrollReveal();
+  const isEven = index % 2 === 0;
+
+  return (
+    <div ref={ref} className="reveal" style={{ transitionDelay: `${index * 50}ms` }}>
+      <div
+        className="rounded-[14px] overflow-hidden"
+        style={{ border: "1px solid #CFD6CF", background: "white", boxShadow: "0 2px 16px rgba(22,40,43,0.07)" }}
+        data-testid={`demo-card-${demo.num}`}
+      >
+        {/* Card header */}
+        <div
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-7 py-5 border-b"
+          style={{
+            borderColor: "#EEF1EC",
+            background: isEven ? "#16282B" : "white",
+          }}
+        >
+          <div className="flex items-center gap-4">
+            <span
+              className="font-fraunces text-3xl font-semibold leading-none"
+              style={{ color: isEven ? "rgba(255,255,255,0.12)" : "#EEF1EC" }}
+            >
+              {demo.num}
+            </span>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span
+                  className="text-xs font-semibold px-2.5 py-0.5 rounded-full"
+                  style={{
+                    background: (tagColors[demo.tag] ?? "#888") + (isEven ? "30" : "18"),
+                    color: tagColors[demo.tag] ?? "#888",
+                  }}
+                >
+                  {demo.tag}
+                </span>
+              </div>
+              <h3
+                className="font-fraunces text-lg font-semibold"
+                style={{ color: isEven ? "white" : "#16282B" }}
+              >
+                {demo.title}
+              </h3>
+            </div>
+          </div>
+          <p
+            className="text-sm leading-relaxed sm:max-w-xs sm:text-right"
+            style={{ color: isEven ? "rgba(255,255,255,0.6)" : "#2E6E64" }}
+          >
+            {demo.description}
+          </p>
+        </div>
+
+        {/* Browser chrome + interactive demo */}
+        <div>
+          <div
+            className="flex items-center gap-2 px-4 py-3 border-b"
+            style={{ background: "#F5F5F3", borderColor: "#EEF1EC" }}
+          >
+            <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#FF5F57" }} />
+            <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#FFBD2E" }} />
+            <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#28C840" }} />
+            <div
+              className="ml-2 flex-1 px-3 py-1 rounded text-xs"
+              style={{ background: "white", border: "1px solid #E0E0E0", color: "#999", maxWidth: 280 }}
+            >
+              {demo.url}
+            </div>
+          </div>
+          {demo.component}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function WorkExamples() {
   const titleRef = useScrollReveal();
-  const [activeId, setActiveId] = useState("socratic");
 
-  const demos: Demo[] = [
+  const demos: DemoConfig[] = [
     {
-      id: "socratic",
-      label: "Socratic Tutor",
-      url: "synops.ai/tutor",
+      num: "01",
       tag: "AI Product",
-      description: "Pick a topic and have a real Socratic conversation. The system responds only with questions, never answers.",
+      title: "Socratic Reasoning Engine",
+      description: "Pick a topic. Type your thinking. The system responds only with questions, never answers.",
+      url: "synops.ai/tutor",
       component: <SocraticChat />,
     },
     {
-      id: "leadership",
-      label: "Leadership Sim",
-      url: "synops.ai/sim",
+      num: "02",
       tag: "Simulation",
-      description: "Navigate 3 real management scenarios. Choose your response, see the consequence, and receive a scored debrief.",
+      title: "Leadership Decision Simulation",
+      description: "Three real management scenarios, scored choices, and a full debrief at the end.",
+      url: "synops.ai/sim",
       component: <LeadershipSim />,
     },
     {
-      id: "adaptive",
-      label: "Adaptive Quiz",
-      url: "synops.ai/assess",
+      num: "03",
       tag: "Assessment",
-      description: "5 questions that adjust in real time based on your answers. Correct answers raise difficulty; wrong ones recalibrate.",
+      title: "Adaptive Assessment Engine",
+      description: "Five questions that change difficulty live based on each answer you give.",
+      url: "synops.ai/assess",
       component: <AdaptiveAssessment />,
     },
     {
-      id: "qa",
-      label: "QA Dashboard",
-      url: "internal.qms/review",
+      num: "04",
       tag: "Automation",
-      description: "An interactive Quality Matters review workflow. Filter by status, expand rows, and approve or flag modules live.",
+      title: "Course QA Review Dashboard",
+      description: "Filter by status, expand any module, and approve or flag it. The progress ring updates live.",
+      url: "internal.qms/review",
       component: <QADashboard />,
     },
     {
-      id: "curriculum",
-      label: "Curriculum Builder",
-      url: "synops.ai/build",
+      num: "05",
       tag: "AI Product",
-      description: "Type a learning topic and watch the engine scaffold a full curriculum with objectives, activities, and assessments.",
+      title: "AI Curriculum Builder",
+      description: "Type a learning topic and get a full structured curriculum with objectives, activities, and assessments.",
+      url: "synops.ai/build",
       component: <CurriculumBuilder />,
     },
     {
-      id: "analytics",
-      label: "Analytics View",
-      url: "synops.ai/analytics",
+      num: "06",
       tag: "Learning Analytics",
-      description: "A cohort analytics dashboard. Toggle metrics, expand learner rows, and identify at-risk participants.",
+      title: "Cohort Analytics Dashboard",
+      description: "Toggle between metrics, click any learner to expand their module-level progress.",
+      url: "synops.ai/analytics",
       component: <AnalyticsDashboard />,
     },
     {
-      id: "course",
-      label: "Course Player",
-      url: "synops.ai/learn",
+      num: "07",
       tag: "Course Design",
-      description: "A fully playable micro-course on learning design. Navigate lessons, complete slides, and unlock progress.",
+      title: "Interactive Course Player",
+      description: "A fully playable micro-course. Navigate lessons, complete slides, and track your progress.",
+      url: "synops.ai/learn",
       component: <CoursePlayer />,
     },
   ];
 
-  const active = demos.find((d) => d.id === activeId) ?? demos[0];
-
-  const tagColors: Record<string, string> = {
-    "AI Product": "#D9920B",
-    "Simulation": "#2E6E64",
-    "Assessment": "#2E6E64",
-    "Automation": "#16282B",
-    "Learning Analytics": "#16282B",
-    "Course Design": "#D9920B",
-  };
-
   return (
     <section id="work-examples" className="py-24 px-6" style={{ background: "#EEF1EC" }}>
-      <div className="max-w-6xl mx-auto">
-        <div ref={titleRef} className="reveal mb-10">
+      <div className="max-w-4xl mx-auto">
+        <div ref={titleRef} className="reveal mb-14">
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#D9920B", letterSpacing: "0.12em" }}>
             Live Demos, Not Screenshots
           </p>
           <h2 className="font-fraunces text-3xl md:text-4xl font-semibold" style={{ color: "#16282B" }}>
             Work Examples
           </h2>
-          <p className="mt-3 text-base" style={{ color: "#2E6E64", maxWidth: 560 }}>
-            Every demo below is fully interactive. Click, type, answer, and explore. These are the kinds of systems Belinda builds.
+          <p className="mt-3 text-base" style={{ color: "#2E6E64", maxWidth: 520 }}>
+            Every example below is fully interactive. Scroll through and use them.
           </p>
         </div>
 
-        {/* Tab strip */}
-        <div className="flex gap-2 flex-wrap mb-8">
-          {demos.map((d) => (
-            <button
-              key={d.id}
-              onClick={() => setActiveId(d.id)}
-              data-testid={`demo-tab-${d.id}`}
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D9920B]"
-              style={{
-                background: activeId === d.id ? "#16282B" : "white",
-                color: activeId === d.id ? "white" : "#16282B",
-                border: `1px solid ${activeId === d.id ? "#16282B" : "#CFD6CF"}`,
-              }}
-            >
-              <span
-                className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                style={{
-                  background: activeId === d.id ? "rgba(255,255,255,0.15)" : (tagColors[d.tag] ?? "#888") + "18",
-                  color: activeId === d.id ? "rgba(255,255,255,0.85)" : (tagColors[d.tag] ?? "#888"),
-                  fontSize: 10,
-                }}
-              >
-                {d.tag}
-              </span>
-              {d.label}
-            </button>
+        <div className="flex flex-col gap-10">
+          {demos.map((demo, i) => (
+            <DemoCard key={demo.num} demo={demo} index={i} />
           ))}
         </div>
-
-        {/* Active demo */}
-        <Reveal key={activeId}>
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
-            {/* Description card */}
-            <div
-              className="lg:col-span-2 rounded-[14px] p-7 flex flex-col justify-between"
-              style={{ background: "#16282B", minHeight: 200 }}
-            >
-              <div>
-                <span
-                  className="inline-block text-xs font-semibold px-3 py-1 rounded-full mb-4"
-                  style={{
-                    background: (tagColors[active.tag] ?? "#888") + "30",
-                    color: tagColors[active.tag] ?? "white",
-                  }}
-                >
-                  {active.tag}
-                </span>
-                <h3 className="font-fraunces text-xl font-semibold text-white mb-3">{active.label}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.7)" }}>
-                  {active.description}
-                </p>
-              </div>
-              <div className="mt-6 flex gap-1">
-                {demos.map((d) => (
-                  <button
-                    key={d.id}
-                    onClick={() => setActiveId(d.id)}
-                    className="rounded-full transition-all focus:outline-none"
-                    style={{
-                      height: 6,
-                      width: d.id === activeId ? 24 : 6,
-                      background: d.id === activeId ? "#D9920B" : "rgba(255,255,255,0.25)",
-                    }}
-                    aria-label={d.label}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Browser mock with demo */}
-            <div className="lg:col-span-3">
-              <BrowserMock url={active.url}>
-                {active.component}
-              </BrowserMock>
-            </div>
-          </div>
-        </Reveal>
       </div>
     </section>
   );
