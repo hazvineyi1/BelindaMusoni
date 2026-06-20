@@ -3,26 +3,18 @@ import { Send } from "lucide-react";
 
 type Message = { role: "user" | "ai"; text: string };
 
-type Determination = {
-  recommendation: string;
-  headline: string;
+type Reflection = {
+  summary: string;
   strengths: string[];
-  concerns: string[];
-  conditions: string[];
-  rationale: string;
+  growthAreas: string[];
+  suggestions: string[];
+  encouragement: string;
 };
 
 const TOTAL_QUESTIONS = 5;
 
 const greeting = (name: string) =>
-  `Take a seat, ${name}. I'm Dr. Reyes. I've read your file, and I'm not here to judge what's in it. I've spent twenty years between the prison system, law enforcement, and getting people hired after release. My only job today is to find out one thing: whether you're ready.\n\nYou're three weeks out, and there's a warehouse job with your name on it if this conversation goes the way it needs to. So let's not waste it.\n\nFirst question, and I want it straight: in your own words, why were you locked up?`;
-
-function recColor(rec: string): string {
-  const r = rec.toLowerCase();
-  if (r.includes("cleared")) return "#2E6E64";
-  if (r.includes("conditional")) return "#D9920B";
-  return "#C2543B";
-}
+  `Take a seat, ${name}. I'm Dr. Reyes. I've read your file, and I'm not here to judge what's in it. I've spent twenty years between the prison system, law enforcement, and getting people hired after release. Today is a practice run, a chance to think out loud before the conversation that counts.\n\nYou're three weeks out, and there's a warehouse job like the one we'll talk through. So let's not waste it.\n\nFirst question, and I want it straight: in your own words, why were you locked up?`;
 
 export default function SocraticChat() {
   const [phase, setPhase] = useState<"name" | "chat" | "result">("name");
@@ -34,7 +26,7 @@ export default function SocraticChat() {
   const [answered, setAnswered] = useState(0);
   const [concluded, setConcluded] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [determination, setDetermination] = useState<Determination | null>(null);
+  const [reflection, setReflection] = useState<Reflection | null>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const runIdRef = useRef(0);
@@ -56,7 +48,7 @@ export default function SocraticChat() {
     setAnswered(0);
     setConcluded(false);
     setError(null);
-    setDetermination(null);
+    setReflection(null);
   };
 
   const send = async () => {
@@ -91,7 +83,7 @@ export default function SocraticChat() {
     }
   };
 
-  const getDetermination = async () => {
+  const getReflection = async () => {
     if (busy) return;
     const runId = runIdRef.current;
     setBusy(true);
@@ -103,13 +95,13 @@ export default function SocraticChat() {
         body: JSON.stringify({ name, history: messages }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json()) as Determination;
+      const data = (await res.json()) as Reflection;
       if (runId !== runIdRef.current) return;
-      setDetermination(data);
+      setReflection(data);
       setPhase("result");
     } catch {
       if (runId !== runIdRef.current) return;
-      setError("Could not pull the assessment together. Try again.");
+      setError("Could not pull the reflection together. Try again.");
     } finally {
       if (runId === runIdRef.current) setBusy(false);
     }
@@ -126,7 +118,7 @@ export default function SocraticChat() {
     setAnswered(0);
     setConcluded(false);
     setError(null);
-    setDetermination(null);
+    setReflection(null);
   };
 
   // Name entry screen
@@ -138,7 +130,7 @@ export default function SocraticChat() {
           Your reentry interview is about to begin.
         </h3>
         <p style={{ color: "rgba(255,255,255,0.7)", fontSize: 13.5, marginBottom: 22, lineHeight: 1.7, maxWidth: 460 }}>
-          You've been granted work release after time served. Across the table is Dr. Reyes, a coach who has spent two decades between corrections, law enforcement, and reentry hiring. She responds to what you actually say, never hands you the answer, and signs off with a determination at the end. Expect it to be tough. It is meant to be.
+          This is a practice interview to help you prepare. Across the table is Dr. Reyes, a coach who has spent two decades between corrections, law enforcement, and reentry hiring. She responds to what you actually say and never hands you the answer. At the end you can pull up a supportive reflection with suggestions you can act on. It is a tool to help you grow, not a decision about you, and it never replaces a real coach.
         </p>
         <label style={{ color: "rgba(255,255,255,0.55)", fontSize: 11, fontWeight: 600, letterSpacing: "0.06em", marginBottom: 8, display: "block" }}>ENTER YOUR NAME TO BEGIN</label>
         <div style={{ display: "flex", gap: 8, maxWidth: 420 }}>
@@ -162,29 +154,32 @@ export default function SocraticChat() {
     );
   }
 
-  // Determination + transcript screen
-  if (phase === "result" && determination) {
-    const d = determination;
-    const color = recColor(d.recommendation);
+  // Reflection + transcript screen
+  if (phase === "result" && reflection) {
+    const r = reflection;
     return (
-      <div style={{ background: "#16282B", padding: "22px 20px", minHeight: 360 }}>
-        <p style={{ color: "#D9920B", fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", marginBottom: 10 }}>COACH'S DETERMINATION</p>
-        <div style={{ display: "inline-block", background: color, color: "white", fontSize: 12, fontWeight: 700, borderRadius: 20, padding: "5px 14px", marginBottom: 12 }}>
-          {d.recommendation}
+      <div style={{ background: "#16282B", padding: "22px 20px", minHeight: 360 }} data-testid="socratic-reflection-view">
+        <p style={{ color: "#D9920B", fontSize: 10, fontWeight: 600, letterSpacing: "0.12em", marginBottom: 10 }}>REFLECTION &amp; SUGGESTIONS</p>
+
+        <div style={{ background: "rgba(46,110,100,0.16)", border: "1px solid rgba(46,110,100,0.4)", borderRadius: 10, padding: "10px 13px", marginBottom: 16 }}>
+          <p style={{ fontSize: 11.5, color: "rgba(255,255,255,0.8)", lineHeight: 1.55 }}>
+            A tool to help you grow, not a verdict. This reflection is here to support your own preparation. It is not a decision about you and does not replace a real coach.
+          </p>
         </div>
+
         <p style={{ fontFamily: "'Fraunces', serif", fontSize: 16, fontWeight: 600, color: "white", lineHeight: 1.4, marginBottom: 18 }}>
-          {d.headline}
+          {r.summary}
         </p>
 
         <div style={{ display: "grid", gap: 14 }}>
-          <DetSection title="Strengths" items={d.strengths} dot="#2E6E64" />
-          <DetSection title="Concerns" items={d.concerns} dot="#C2543B" />
-          <DetSection title="Conditions to move forward" items={d.conditions} dot="#D9920B" />
+          <DetSection title="What you showed" items={r.strengths} dot="#2E6E64" />
+          <DetSection title="Areas to keep working on" items={r.growthAreas} dot="#D9920B" />
+          <DetSection title="Suggestions to help you" items={r.suggestions} dot="#D9920B" />
         </div>
 
         <div style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-          <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.06em", marginBottom: 6 }}>RATIONALE</p>
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.65 }}>{d.rationale}</p>
+          <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.5)", letterSpacing: "0.06em", marginBottom: 6 }}>A NOTE FROM DR. REYES</p>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", lineHeight: 1.65 }}>{r.encouragement}</p>
         </div>
 
         <details style={{ marginTop: 16, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.1)" }}>
@@ -266,9 +261,9 @@ export default function SocraticChat() {
       {/* Input / conclusion bar */}
       {concluded ? (
         <div style={{ padding: "12px 14px", borderTop: "1px solid rgba(255,255,255,0.08)", display: "flex", gap: 8 }}>
-          <button onClick={getDetermination} disabled={busy} data-testid="socratic-determination"
+          <button onClick={getReflection} disabled={busy} data-testid="socratic-determination"
             style={{ flex: 1, background: "#D9920B", border: "none", borderRadius: 8, padding: "11px 14px", cursor: busy ? "default" : "pointer", color: "white", fontSize: 13, fontWeight: 600, opacity: busy ? 0.6 : 1 }}>
-            {busy ? "Reviewing your answers..." : "View determination & transcript"}
+            {busy ? "Putting together your reflection..." : "View reflection & suggestions"}
           </button>
           <button onClick={reset} data-testid="socratic-chat-reset"
             style={{ background: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.15)", borderRadius: 8, padding: "11px 12px", cursor: "pointer", color: "rgba(255,255,255,0.5)", fontSize: 12 }}>

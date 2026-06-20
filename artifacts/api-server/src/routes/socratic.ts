@@ -75,13 +75,12 @@ const DeterminationBody = z.object({
   history: z.array(TurnSchema).max(60),
 });
 
-const DeterminationResult = z.object({
-  recommendation: z.enum(["Cleared for placement", "Conditional placement", "Not yet ready"]),
-  headline: z.string().min(1),
+const ReflectionResult = z.object({
+  summary: z.string().min(1),
   strengths: z.array(z.string().min(1)).min(1),
-  concerns: z.array(z.string().min(1)).min(1),
-  conditions: z.array(z.string().min(1)).min(1),
-  rationale: z.string().min(1),
+  growthAreas: z.array(z.string().min(1)).min(1),
+  suggestions: z.array(z.string().min(1)).min(1),
+  encouragement: z.string().min(1),
 });
 
 const PERSONA = `You are Dr. Elena Reyes, a reentry and work release coach. You hold a doctorate in clinical psychology, spent years inside the correctional and law enforcement system, and now place recently released people into jobs. Right now you are conducting a work release assessment interview with a person who has recently been released from incarceration and is being considered for a warehouse job.
@@ -116,7 +115,7 @@ router.post("/socratic/reply", rateLimit, async (req, res) => {
   const totalQuestions = 5;
   const closing =
     questionNumber >= totalQuestions
-      ? `\n\nThis is their answer to your final question. React to it honestly, then CLOSE the interview: give a brief, candid read on where they stand and tell them the interview is over. Do not ask another question.`
+      ? `\n\nThis is their answer to your final question. React to it honestly and warmly, acknowledge the effort and honesty they brought to this conversation, and let them know the interview is over. Do NOT give any verdict, rating, or judgment on whether they are ready, cleared, or will get the job. Do not evaluate their readiness at all. Simply close with respect and encourage them to keep reflecting. Do not ask another question.`
       : `\n\nThis is question ${questionNumber} of ${totalQuestions}. After reacting to their answer, ask your next question to move the interview forward.`;
 
   const messages: ChatMsg[] = [
@@ -155,18 +154,17 @@ router.post("/socratic/determination", rateLimit, async (req, res) => {
     .map((m) => `${m.role === "ai" ? "Dr. Reyes" : name}: ${m.text}`)
     .join("\n\n");
 
-  const sys = `You are Dr. Elena Reyes, a reentry and work release coach, writing your private assessment after a work release interview with ${name}, who is being considered for a warehouse job. Base your judgment ONLY on what ${name} actually said in the transcript. Be tough but fair, like a clinician who has seen this go both ways.
+  const sys = `You are Dr. Elena Reyes, a reentry and work release coach, writing a short, supportive reflection to help ${name} after a practice interview. This reflection is a coaching TOOL meant to support and enhance ${name}'s own growth and the work of a real human coach. It is NOT a decision, a verdict, or a replacement for any person. Do NOT say whether ${name} is cleared, approved, ready, hired, or rejected, and do NOT assign any rating, score, or pass or fail label. Base everything ONLY on what ${name} actually said in the transcript. Be honest and constructive, warm but real, and always point toward what can help them next.
 
 Do NOT use the em dash character anywhere. Respond with ONLY valid JSON, no markdown, in exactly this shape:
 {
-  "recommendation": one of "Cleared for placement", "Conditional placement", or "Not yet ready",
-  "headline": a one sentence summary of your read on ${name},
-  "strengths": array of 1 to 3 short strings, things ${name} showed that support reentry,
-  "concerns": array of 1 to 3 short strings, real risks based on what they said,
-  "conditions": array of 1 to 3 short strings, concrete next steps or conditions you would attach,
-  "rationale": 2 to 3 sentences explaining the recommendation, referencing specific things ${name} said
+  "summary": a 1 to 2 sentence supportive reflection on how the conversation went, with no verdict or judgment of readiness,
+  "strengths": array of 1 to 3 short strings, real things ${name} showed that will help them,
+  "growthAreas": array of 1 to 3 short strings, framed gently as things to keep working on, never as failures,
+  "suggestions": array of 2 to 4 short strings, concrete and practical things ${name} can do or seek out that would help them, such as habits to build, people or programs to lean on, or ways to prepare,
+  "encouragement": a 1 to 2 sentence closing note that motivates ${name} to keep going
 }
-If the transcript is too thin to judge, weight toward "Not yet ready" or "Conditional placement" and say so in the rationale.`;
+If the transcript is thin, keep the tone encouraging and focus the suggestions on simple first steps.`;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -186,10 +184,10 @@ If the transcript is too thin to judge, weight toward "Not yet ready" or "Condit
       res.status(502).json({ error: "Could not parse determination." });
       return;
     }
-    const validated = DeterminationResult.safeParse(data);
+    const validated = ReflectionResult.safeParse(data);
     if (!validated.success) {
-      req.log?.warn({ issues: validated.error.flatten() }, "determination shape invalid");
-      res.status(502).json({ error: "The assessment came back incomplete. Try again." });
+      req.log?.warn({ issues: validated.error.flatten() }, "reflection shape invalid");
+      res.status(502).json({ error: "The reflection came back incomplete. Try again." });
       return;
     }
     res.json(validated.data);
