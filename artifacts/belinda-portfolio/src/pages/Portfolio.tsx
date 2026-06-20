@@ -722,7 +722,7 @@ type DemoConfig = {
   component: React.ReactNode;
 };
 
-function DemoCard({ demo, index }: { demo: DemoConfig; index: number }) {
+function DemoCard({ demo, index, open, onToggle }: { demo: DemoConfig; index: number; open: boolean; onToggle: () => void }) {
   const ref = useScrollReveal();
   const isEven = index % 2 === 0;
 
@@ -733,11 +733,17 @@ function DemoCard({ demo, index }: { demo: DemoConfig; index: number }) {
         style={{ border: "1px solid #CFD6CF", background: "white", boxShadow: "0 2px 16px rgba(22,40,43,0.07)" }}
         data-testid={`demo-card-${demo.num}`}
       >
-        {/* Card header */}
-        <div
-          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-7 py-5 border-b"
+        {/* Card header (click to toggle) */}
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={open}
+          aria-controls={`demo-panel-${demo.num}`}
+          id={`demo-header-${demo.num}`}
+          data-testid={`demo-toggle-${demo.num}`}
+          className="w-full text-left flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-7 py-5 border-b cursor-pointer"
           style={{
-            borderColor: "#EEF1EC",
+            borderColor: open ? "#EEF1EC" : "transparent",
             background: isEven ? "#16282B" : "white",
           }}
         >
@@ -757,15 +763,36 @@ function DemoCard({ demo, index }: { demo: DemoConfig; index: number }) {
               </h3>
             </div>
           </div>
-          <p
-            className="text-sm leading-relaxed sm:max-w-xs sm:text-right"
-            style={{ color: isEven ? "rgba(255,255,255,0.6)" : "#2E6E64" }}
-          >
-            {demo.description}
-          </p>
-        </div>
+          <div className="flex items-center gap-4 sm:justify-end">
+            <p
+              className="text-sm leading-relaxed sm:max-w-xs sm:text-right"
+              style={{ color: isEven ? "rgba(255,255,255,0.6)" : "#2E6E64" }}
+            >
+              {demo.description}
+            </p>
+            <span
+              className="shrink-0 flex items-center justify-center rounded-full"
+              style={{
+                width: 32,
+                height: 32,
+                background: isEven ? "rgba(255,255,255,0.08)" : "#EEF1EC",
+                color: isEven ? "white" : "#16282B",
+                transition: "transform 0.25s ease",
+                transform: open ? "rotate(180deg)" : "rotate(0deg)",
+              }}
+            >
+              <ChevronDown size={18} />
+            </span>
+          </div>
+        </button>
 
-        <div style={{ borderTop: "1px solid #EEF1EC" }}>
+        <div
+          id={`demo-panel-${demo.num}`}
+          role="region"
+          aria-labelledby={`demo-header-${demo.num}`}
+          hidden={!open}
+          style={{ borderTop: open ? "1px solid #EEF1EC" : "none", display: open ? "block" : "none" }}
+        >
           {demo.component}
         </div>
       </div>
@@ -775,6 +802,7 @@ function DemoCard({ demo, index }: { demo: DemoConfig; index: number }) {
 
 function WorkExamples() {
   const titleRef = useScrollReveal();
+  const [openNum, setOpenNum] = useState<string | null>(null);
 
   const demos: DemoConfig[] = [
     {
@@ -870,13 +898,19 @@ function WorkExamples() {
             Work Examples
           </h2>
           <p className="mt-3 text-base" style={{ color: "#2E6E64", maxWidth: 520 }}>
-            Every example below is fully interactive. Scroll through and use them.
+            Every example below is fully interactive. Click any one to expand it and try it out.
           </p>
         </div>
 
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-4">
           {demos.map((demo, i) => (
-            <DemoCard key={demo.num} demo={demo} index={i} />
+            <DemoCard
+              key={demo.num}
+              demo={demo}
+              index={i}
+              open={openNum === demo.num}
+              onToggle={() => setOpenNum(prev => (prev === demo.num ? null : demo.num))}
+            />
           ))}
         </div>
       </div>
