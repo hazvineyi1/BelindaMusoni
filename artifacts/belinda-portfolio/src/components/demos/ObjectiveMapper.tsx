@@ -118,7 +118,7 @@ export default function ObjectiveMapper() {
                 onClick={() => setExpanded(isOpen ? null : obj.id)}
                 data-testid={`objective-row-${obj.id}`}
               >
-                {/* Bloom badge — click to cycle */}
+                {/* Bloom badge - click to cycle */}
                 <button
                   onClick={e => { e.stopPropagation(); cycleBloom(obj.id); }}
                   title="Click to change Bloom level"

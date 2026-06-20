@@ -6,10 +6,10 @@ type Module = { id: number; name: string; criteria: number; met: number; status:
 const initialModules: Module[] = [
   { id: 1, name: "Module 1: Learning Objectives and Alignment", criteria: 8, met: 8, status: "Approved", reviewer: "B. Musoni" },
   { id: 2, name: "Module 2: Instructional Materials", criteria: 8, met: 5, status: "In Review", reviewer: "B. Musoni" },
-  { id: 3, name: "Module 3: Assessment and Measurement", criteria: 8, met: 3, status: "Flagged", reviewer: "—" },
+  { id: 3, name: "Module 3: Assessment and Measurement", criteria: 8, met: 3, status: "Flagged", reviewer: "-" },
   { id: 4, name: "Module 4: Course Activities and Engagement", criteria: 8, met: 8, status: "Approved", reviewer: "B. Musoni" },
-  { id: 5, name: "Module 5: Learner Support", criteria: 8, met: 7, status: "Pending", reviewer: "—" },
-  { id: 6, name: "Module 6: Course Technology", criteria: 8, met: 2, status: "Flagged", reviewer: "—" },
+  { id: 5, name: "Module 5: Learner Support", criteria: 8, met: 7, status: "Pending", reviewer: "-" },
+  { id: 6, name: "Module 6: Course Technology", criteria: 8, met: 2, status: "Flagged", reviewer: "-" },
 ];
 
 const statusColors: Record<Status, { bg: string; color: string }> = {

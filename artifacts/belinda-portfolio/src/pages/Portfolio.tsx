@@ -1198,7 +1198,7 @@ function Contact() {
             className="rounded-[14px] overflow-hidden grid grid-cols-1 md:grid-cols-2"
             style={{ border: "1px solid #CFD6CF", boxShadow: "0 8px 32px rgba(22,40,43,0.10)" }}
           >
-            {/* Left — dark ambient */}
+            {/* Left - dark ambient */}
             <div className="ambient-bg p-10 flex flex-col justify-between" style={{ minHeight: 380 }}>
               <div>
                 <h3 className="font-fraunces text-2xl font-semibold text-white mb-6">
@@ -1235,7 +1235,7 @@ function Contact() {
               </div>
             </div>
 
-            {/* Right — form */}
+            {/* Right - form */}
             <div className="bg-white p-10">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5" data-testid="contact-form">

@@ -89,7 +89,7 @@ const slides: SlideData[] = [
       <TabSlide tabs={[
         { label: "Intrinsic",  content: "Intrinsic load is the inherent complexity of the material itself. You can't eliminate it, but you can sequence content to build from simpler concepts first, reducing the mental effort of working with new material." },
         { label: "Extraneous", content: "Extraneous load comes from poor design choices: cluttered slides, inconsistent navigation, unclear labels. Every pixel of unnecessary complexity steals cognitive resources from actual learning." },
-        { label: "Germane",    content: "Germane load is the productive mental effort of building schema — making sense of new information and connecting it to what the learner already knows. Good instructional design maximises this while minimising the other two." },
+        { label: "Germane",    content: "Germane load is the productive mental effort of building schema, making sense of new information and connecting it to what the learner already knows. Good instructional design maximises this while minimising the other two." },
       ]} />
     ),
   },
@@ -116,8 +116,8 @@ const slides: SlideData[] = [
     body: (
       <RevealSlide items={[
         { heading: "Coherence", text: "Exclude material that doesn't directly support the learning objective. Each word, image, and sound should earn its place." },
-        { heading: "Signalling", text: "Use visual cues — highlights, arrows, bold text — to guide attention to what matters. Learners shouldn't have to guess where to look." },
-        { heading: "Redundancy", text: "Don't show the same text on screen that you're narrating word-for-word. People read or listen — they don't do both well simultaneously." },
+        { heading: "Signalling", text: "Use visual cues such as highlights, arrows, and bold text to guide attention to what matters. Learners shouldn't have to guess where to look." },
+        { heading: "Redundancy", text: "Don't show the same text on screen that you're narrating word-for-word. People read or listen, and they don't do both well simultaneously." },
         { heading: "Spatial Contiguity", text: "Place related text and images near each other. Learners shouldn't scan across the screen to connect corresponding elements." },
         { heading: "Segmenting", text: "Break content into learner-controlled segments. Let people pause, process, and continue at their own pace." },
       ]} />
