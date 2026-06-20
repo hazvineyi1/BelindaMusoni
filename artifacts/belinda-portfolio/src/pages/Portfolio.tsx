@@ -780,8 +780,8 @@ function WorkExamples() {
     {
       num: "01",
       tag: "AI Product",
-      title: "Socratic Reasoning Engine",
-      description: "Pick a topic. Type your thinking. The system responds only with questions, never answers.",
+      title: "Socratic Coaching Simulation",
+      description: "A work release reentry interview. Enter your name, then a coach who never hands you the answer pushes you to think through accountability, temptation, and what is at stake.",
       url: "synops.ai/tutor",
       component: <SocraticChat />,
     },

@@ -128,13 +128,37 @@ const slides: SlideData[] = [
 export default function ELearningSlide() {
   const [slideIdx, setSlideIdx] = useState(0);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
+  const [done, setDone] = useState(false);
   const slide = slides[slideIdx];
 
   const advance = () => {
     setCompleted(c => new Set([...c, slideIdx]));
-    if (slideIdx < slides.length - 1) setSlideIdx(s => s + 1);
+    if (slideIdx < slides.length - 1) {
+      setSlideIdx(s => s + 1);
+    } else {
+      setDone(true);
+    }
   };
   const back = () => { if (slideIdx > 0) setSlideIdx(s => s - 1); };
+  const restart = () => { setSlideIdx(0); setCompleted(new Set()); setDone(false); };
+
+  if (done) {
+    return (
+      <div style={{ background: "#fafafa", minHeight: 360, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 28px", textAlign: "center" }}>
+        <div style={{ width: 56, height: 56, borderRadius: "50%", background: "#2E6E64", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 18 }}>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+        </div>
+        <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 700, color: "#16282B", marginBottom: 8 }}>Module Complete</h3>
+        <p style={{ fontSize: 13, color: "#2E6E64", lineHeight: 1.6, maxWidth: 320, marginBottom: 22 }}>
+          You worked through all {slides.length} slides, including a branching scenario and the multimedia principles. This is how a finished lesson tracks progress and confirms completion.
+        </p>
+        <button onClick={restart} data-testid="elearning-restart"
+          style={{ background: "#D9920B", color: "white", border: "none", borderRadius: 8, padding: "9px 22px", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>
+          Restart module
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div style={{ background: "#fafafa", minHeight: 360 }}>
