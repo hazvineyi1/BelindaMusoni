@@ -781,7 +781,7 @@ function WorkExamples() {
       num: "01",
       tag: "AI Product",
       title: "Socratic Coaching Simulation",
-      description: "A work release reentry interview. Enter your name, then a coach who never hands you the answer pushes you to think through accountability, temptation, and what is at stake.",
+      description: "A live AI work release interview. Enter your name, then a coach who reads what you actually say and never hands you the answer presses you on accountability and temptation, and closes with a determination on your readiness.",
       url: "synops.ai/tutor",
       component: <SocraticChat />,
     },

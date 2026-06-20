@@ -1,0 +1,1 @@
+- [Testing subagent pitfalls](testing-subagent-pitfalls.md) — E2E "reset to first screen" + aborted request usually means the test agent reloaded mid-flow, not a real bug.
