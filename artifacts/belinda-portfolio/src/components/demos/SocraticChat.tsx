@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Send } from "lucide-react";
+import { API_BASE } from "@/lib/apiBase";
 
 type Message = { role: "user" | "ai"; text: string };
 
@@ -64,7 +65,7 @@ export default function SocraticChat() {
     setBusy(true);
 
     try {
-      const res = await fetch("/api/socratic/reply", {
+      const res = await fetch(`${API_BASE}/api/socratic/reply`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, questionNumber: qn, history, userMessage: text }),
@@ -89,7 +90,7 @@ export default function SocraticChat() {
     setBusy(true);
     setError(null);
     try {
-      const res = await fetch("/api/socratic/determination", {
+      const res = await fetch(`${API_BASE}/api/socratic/determination`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, history: messages }),

@@ -1,0 +1,16 @@
+# Railway config for the Vite portfolio frontend (@workspace/belinda-portfolio).
+# In the Railway dashboard set this service's:
+#   - Root Directory: / (repo root, required for the pnpm workspace)
+#   - Config-as-code path: artifacts/belinda-portfolio/railway.toml
+# Build-time variable (Vite inlines it):
+#   - VITE_API_URL = https://<your-api-service>.up.railway.app   (no trailing slash)
+# Runtime variable:
+#   - BASE_PATH = /   (optional; defaults to "/")
+[build]
+builder = "NIXPACKS"
+buildCommand = "corepack enable && pnpm install --frozen-lockfile && pnpm --filter @workspace/belinda-portfolio run build"
+
+[deploy]
+startCommand = "pnpm --filter @workspace/belinda-portfolio run serve"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
