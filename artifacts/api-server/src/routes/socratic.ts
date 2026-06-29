@@ -126,7 +126,7 @@ router.post("/socratic/reply", rateLimit, async (req, res) => {
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "claude-opus-4-1,
+    model: "claude-opus-4-1",
       max_completion_tokens: 8192,
       messages,
     });
