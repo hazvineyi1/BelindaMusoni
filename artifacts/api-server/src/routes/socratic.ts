@@ -2,6 +2,10 @@ import { Router, type IRouter, type Request, type Response, type NextFunction } 
 import { z } from "zod";
 import { openai } from "@workspace/integrations-openai-ai-server";
 
+// Single AI model for both the live coach reply and the closing reflection.
+// Change it in Railway with the SOCRATIC_MODEL variable, no code edit needed.
+const MODEL = process.env.SOCRATIC_MODEL ?? "gpt-4o";
+
 const router: IRouter = Router();
 
 // ── Rate limiting ────────────────────────────────────────────────────────────
@@ -126,7 +130,7 @@ router.post("/socratic/reply", rateLimit, async (req, res) => {
 
   try {
     const completion = await openai.chat.completions.create({
-    model: "claude-opus-4-1",
+      model: MODEL,
       max_completion_tokens: 8192,
       messages,
     });
@@ -168,7 +172,7 @@ If the transcript is thin, keep the tone encouraging and focus the suggestions o
 
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-5.4",
+      model: MODEL,
       max_completion_tokens: 8192,
       response_format: { type: "json_object" },
       messages: [
