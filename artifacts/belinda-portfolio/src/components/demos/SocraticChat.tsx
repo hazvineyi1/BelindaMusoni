@@ -191,8 +191,8 @@ export default function SocraticChat() {
 
   const reset = () => resetState();
 
-  // Scenario switcher (the two link-tabs)
-  const Tabs = () => (
+  // Scenario switcher (the two link-tabs), inline so it never remounts.
+  const tabs = (
     <div style={{ display: "flex", gap: 6, padding: "10px 14px", background: "rgba(0,0,0,0.25)", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
       {SCENARIOS.map(s => {
         const active = s.id === scenarioId;
@@ -396,7 +396,7 @@ export default function SocraticChat() {
 
   return (
     <div>
-      <Tabs />
+      {tabs}
       {body}
       <style>{`
         @keyframes typingDot {
